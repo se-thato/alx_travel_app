@@ -3,6 +3,8 @@ import environ
 import os
 from decouple import config
 
+import dj_database_url
+
 
 # Initialize environment variables
 env = environ.Env(
@@ -22,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-1rn25_y1dwin6&!=y3cqs#lbk2bfht^)y7__hjpr0n38)*kzi2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', '.herokuapp.com']
 
 
 # Application definition
@@ -42,6 +44,9 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_yasg',
     'celery',
+
+    'whitenoise.runserver_nostatic',
+    'django.contrib.staticfiles',
     
 ]
 
@@ -53,7 +58,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
+
+
+WHITENOISE_USE_FINDERS = True
 
 ROOT_URLCONF = 'alx_travel_app.urls'
 
@@ -74,6 +85,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'alx_travel_app.wsgi.application'
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -88,6 +101,10 @@ DATABASES = {
         'PORT': '3306',
     }
 }
+
+
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
 
 
 # Password validation
