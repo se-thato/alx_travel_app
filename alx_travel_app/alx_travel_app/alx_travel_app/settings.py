@@ -1,6 +1,7 @@
 from pathlib import Path
 import environ
 import os
+from decouple import config
 
 
 # Initialize environment variables
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'drf_yasg',
+    'celery',
     
 ]
 
@@ -79,7 +81,7 @@ WSGI_APPLICATION = 'alx_travel_app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ev_charging_db',
+        'NAME': 'travel_db',
         'USER': 'root',
         'PASSWORD': 'theplanetisflat',
         'HOST': 'localhost',
@@ -141,3 +143,10 @@ SWAGGER_SETTINGS = {
     },
     'USE_SESSION_AUTH': False,
 }
+
+
+# Celery configuration
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
